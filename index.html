@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advance Digital Marketing - Online Exam</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Security Features: Prevent Copy & Selection */
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col justify-between antialiased selection:bg-none">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="bg-slate-800/80 backdrop-blur border-b border-slate-700/60 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-sky-500 to-indigo-600 p-2 rounded-xl shadow-lg">
+                    <i class="fa-solid fa-graduation-cap text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-white leading-tight">Institute of Excellence</h1>
+                    <p class="text-xs text-sky-400 font-medium">Advance Digital Marketing (ADMM) Exam</p>
+                </div>
+            </div>
+
+            <!-- Exam Info Badge (Visible only during Exam) -->
+            <div id="exam-stats-header" class="hidden flex items-center space-x-4">
+                <div class="bg-slate-700/60 px-3 py-1.5 rounded-lg border border-slate-600/50 flex items-center space-x-2">
+                    <i class="fa-regular fa-clock text-amber-400 animate-pulse"></i>
+                    <span id="timer-display" class="font-mono text-sm font-semibold text-amber-300">200:00</span>
+                </div>
+                <div class="bg-rose-950/40 text-rose-300 border border-rose-800/40 px-3 py-1.5 rounded-lg flex items-center space-x-2 text-xs font-medium">
+                    <i class="fa-solid fa-shield-halved text-rose-400"></i>
+                    <span>Violations: <strong id="violation-count" class="text-rose-200">0</strong>/3</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINERS -->
+    <main class="flex-grow flex items-center justify-center p-4 sm:p-6">
+
+        <!-- 1. START SCREEN (Only Asks Student Name) -->
+        <section id="start-screen" class="w-full max-w-md bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl p-6 sm:p-8">
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-sky-500/10 text-sky-400 rounded-full mb-3 border border-sky-500/20">
+                    <i class="fa-solid fa-user-graduate text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-white">Online Portal Exam</h2>
+                <p class="text-slate-400 text-xs mt-1">Apna Naam Enter Kar K Test Start Karein</p>
+            </div>
+
+            <!-- Exam Guidelines -->
+            <div class="bg-slate-900/60 rounded-xl p-4 border border-slate-700/50 mb-6 text-xs text-slate-300 space-y-2">
+                <div class="flex items-start space-x-2">
+                    <i class="fa-solid fa-circle-info text-sky-400 mt-0.5"></i>
+                    <span>Total <strong>200 MCQs</strong> hain aur time <strong>200 Minutes</strong> hai.</span>
+                </div>
+                <div class="flex items-start space-x-2 text-amber-400">
+                    <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
+                    <span>New Tab open karna ya Minimize karna sakht mana hai. 3 Violations par test auto-submit ho jayega!</span>
+                </div>
+                <div class="flex items-start space-x-2 text-emerald-400">
+                    <i class="fa-solid fa-circle-check mt-0.5"></i>
+                    <span>Passing Criteria: <strong>70% Marks (140/200)</strong> required hain.</span>
+                </div>
+            </div>
+
+            <form id="start-form" onsubmit="handleStartExam(event)" class="space-y-4">
+                <div>
+                    <label for="student-name" class="block text-xs font-medium text-slate-300 mb-1">Student Full Name *</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                            <i class="fa-solid fa-user"></i>
+                        </span>
+                        <input type="text" id="student-name" required placeholder="Maslan: Ali Raza" 
+                            class="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 text-sm transition">
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg shadow-sky-500/20 transition duration-200 flex items-center justify-center space-x-2 text-sm">
+                    <i class="fa-solid fa-play text-xs"></i>
+                    <span>Start Test Now</span>
+                </button>
+            </form>
+        </section>
+
+        <!-- 2. EXAM INTERFACE SCREEN -->
+        <section id="exam-screen" class="hidden w-full max-w-6xl grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+            
+            <!-- Left Side: MCQ Card Area (3 Columns wide) -->
+            <div class="lg:col-span-3 bg-slate-800 border border-slate-700/80 rounded-2xl shadow-xl p-5 sm:p-7 flex flex-col justify-between min-h-[500px]">
+                
+                <!-- Question Top Header -->
+                <div>
+                    <div class="flex justify-between items-center pb-4 mb-5 border-b border-slate-700/60">
+                        <span class="text-xs font-bold text-sky-400 tracking-wider uppercase bg-sky-950/60 border border-sky-800/50 px-3 py-1 rounded-full">
+                            Sawaal <span id="current-q-num">1</span> / 200
+                        </span>
+                        <button onclick="toggleHint()" class="text-xs font-medium text-amber-300 hover:text-amber-200 bg-amber-950/40 border border-amber-800/40 px-3 py-1 rounded-lg flex items-center space-x-1.5 transition">
+                            <i class="fa-regular fa-lightbulb"></i>
+                            <span>Hint Dekhein</span>
+                        </button>
+                    </div>
+
+                    <!-- Hint Box (Collapsible) -->
+                    <div id="hint-box" class="hidden mb-5 bg-amber-950/20 border border-amber-500/30 text-amber-200 text-xs p-3 rounded-xl flex items-start space-x-2">
+                        <i class="fa-solid fa-circle-info text-amber-400 text-sm mt-0.5"></i>
+                        <span id="hint-text">Rahnmai details yahan show hongi...</span>
+                    </div>
+
+                    <!-- Question Text -->
+                    <h3 id="question-text" class="text-base sm:text-lg font-semibold text-slate-100 mb-6 leading-relaxed">
+                        Sawaal load ho raha hai...
+                    </h3>
+
+                    <!-- Options List -->
+                    <div id="options-container" class="space-y-3">
+                        <!-- Dynamic Options loaded here -->
+                    </div>
+                </div>
+
+                <!-- Bottom Navigation Buttons -->
+                <div class="flex justify-between items-center pt-6 mt-6 border-t border-slate-700/60">
+                    <button id="prev-btn" onclick="prevQuestion()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 font-medium rounded-xl text-xs sm:text-sm flex items-center space-x-2 transition">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Peechay</span>
+                    </button>
+
+                    <div class="flex items-center space-x-3">
+                        <button id="next-btn" onclick="nextQuestion()" class="px-5 py-2 bg-sky-600 hover:bg-sky-500 text-white font-medium rounded-xl text-xs sm:text-sm flex items-center space-x-2 shadow-md transition">
+                            <span>Aagay</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+
+                        <button onclick="confirmSubmitExam()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold rounded-xl text-xs sm:text-sm flex items-center space-x-1.5 shadow-md transition">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Submit Exam</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Side: Question Navigation Grid (1 Column) -->
+            <div class="lg:col-span-1 bg-slate-800 border border-slate-700/80 rounded-2xl shadow-xl p-5">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex justify-between items-center">
+                    <span>Sawaalat Ki List</span>
+                    <span id="answered-count-badge" class="text-sky-400 font-normal">0/200</span>
+                </h4>
+                
+                <!-- Status Legend -->
+                <div class="flex items-center justify-between text-[10px] text-slate-400 mb-4 pb-3 border-b border-slate-700/60">
+                    <div class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-700"></span><span>Unseen</span></div>
+                    <div class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full bg-sky-600"></span><span>Attempted</span></div>
+                    <div class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-full ring-2 ring-amber-400 bg-sky-600"></span><span>Current</span></div>
+                </div>
+
+                <!-- Grid Buttons -->
+                <div id="question-grid" class="grid grid-cols-5 gap-2 max-h-[380px] overflow-y-auto pr-1">
+                    <!-- Dynamic Grid Buttons -->
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 3. RESULT SCREEN -->
+        <section id="result-screen" class="hidden w-full max-w-3xl bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl p-6 sm:p-8">
+            <div class="text-center mb-8">
+                <div id="result-badge-icon" class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-3 shadow-inner">
+                    <!-- Icon loaded dynamically -->
+                </div>
+                <h2 id="result-status-title" class="text-2xl sm:text-3xl font-extrabold text-white">Generating Result...</h2>
+                <p id="student-greeting" class="text-slate-400 text-sm mt-1">Shukriya test mukammal karne ka!</p>
+            </div>
+
+            <!-- Result Cards Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/50 text-center">
+                    <p class="text-xs text-slate-400">Kul Numbers</p>
+                    <p class="text-xl font-bold text-slate-200 mt-1">200</p>
+                </div>
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/50 text-center">
+                    <p class="text-xs text-slate-400">Aap Ke Numbers</p>
+                    <p id="obtained-score" class="text-xl font-bold text-sky-400 mt-1">0</p>
+                </div>
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/50 text-center">
+                    <p class="text-xs text-slate-400">Percentage</p>
+                    <p id="score-percentage" class="text-xl font-bold text-emerald-400 mt-1">0%</p>
+                </div>
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/50 text-center">
+                    <p class="text-xs text-slate-400">Nateeja</p>
+                    <p id="final-status-badge" class="text-sm font-bold uppercase mt-2 px-2 py-0.5 rounded-full inline-block">N/A</p>
+                </div>
+            </div>
+
+            <div class="flex justify-center">
+                <button onclick="location.reload()" class="px-6 py-2.5 bg-slate-700 hover:bg-slate-600 text-white font-medium rounded-xl text-sm transition flex items-center space-x-2">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>Dubara Test Dijiye</span>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-3 text-center text-xs text-slate-500">
+        &copy; 2026 Institute of Excellence. Advance Digital Marketing Online Exam Portal.
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. QUESTION BANK (200 MCQs with Roman Urdu Hints) ---
+        const originalQuestions = [
+            // Sales Funnel & Meta Ads
+            { q: "Sales funnel ka sab se pehla stage konsa hota hai?", options: ["Awareness", "Interest", "Decision", "Action"], answer: 0, hint: "Is stage par customer brand ko pehli baar dekhta hai." },
+            { q: "Conversion Rate Optimize karne ka kya matlab hai?", options: ["Website visitors ko customers mein badalna", "Social media followers barhana", "Email templates design karna", "Domain name khareedna"], answer: 0, hint: "Is se visitors sales mein convert hotey hain." },
+            { q: "Facebook Pixel ka asal maqsad kya hai?", options: ["Website tracking aur Retargeting", "Facebook Page ka logo banana", "Organic posts schedule karna", "Comments auto-delete karna"], answer: 0, hint: "Yeh website visitors ki activity track karta hai." },
+            { q: "Meta Ads Manager mein A/B Testing kyun ki jaati hai?", options: ["Do alag ad strategies ko compare karne k liye", "Budget double karne k liye", "Page followers hidden karne k liye", "Copyright issues hal karne k liye"], answer: 0, hint: "Yeh do alag designs ya audience ko test karta hai." },
+            { q: "Custom Audience kis bunyaad par banti hai?", options: ["Aap k existing customer data ya website traffic par", "Random logon par", "Competitors k followers par", "Google search history par"], answer: 0, hint: "Is mein aap ka apna existing data istemal hota hai." },
+            { q: "Lookalike Audience ka kya faida hai?", options: ["Aap k best customers jaisay naye log talash karna", "Purane customers ko block karna", "Ad cost zero kar dena", "Automatic video post karna"], answer: 0, hint: "Yeh similar behaviors wale naye log dhoondta hai." },
+            { q: "Facebook Reels Ad ka best aspect ratio kya hota hai?", options: ["9:16 Vertical", "16:9 Landscape", "1:1 Square", "4:3 Standard"], answer: 0, hint: "Mobile screen ka pura vertical size." },
+            { q: "CRM Integration Facebook Ads mein kyun zaroori hai?", options: ["Leads ko auto-manage aur sync karne k liye", "Page likes automatically barhane k liye", "Free ads chalane k liye", "Password secure karne k liye"], answer: 0, hint: "Is se leads direct aap k database mein chali jaati hain." },
+            { q: "Facebook Group ka primary benefit brand k liye kya hai?", options: ["Community Engagement aur loyalty", "Direct Google ranking", "Ad budget kam karna", "Unlimited broadcast messaging"], answer: 0, hint: "Yeh logon ko aapas mein jorta hai." },
+            { q: "Retargeting Campaign ka target audience konsa hota hai?", options: ["Wo log jo pehle brand se interact kar chuke hain", "Billkul naye log", "International users", "Block kiye hue accounts"], answer: 0, hint: "Yeh purane visitors ko dobara ad dikhata hai." },
+
+            // Local SEO, Google My Business (GMB)
+            { q: "GMB ka full form kya hai?", options: ["Google My Business", "Google Marketing Board", "General Media Bureau", "Global Market Base"], answer: 0, hint: "Google ka local listing tool." },
+            { q: "Local SEO mein NAP se kya murad hai?", options: ["Name, Address, Phone Number", "Network, Access, Protocol", "New Ad Performance", "National Association Plan"], answer: 0, hint: "Business ki teen bunyadi information." },
+            { q: "Google Maps par business rank karne k liye sab se ahem factor kya hai?", options: ["Positive Customer Reviews aur accurate NAP", "Daily blog publishing", "High ad budget", "Twitter followers"], answer: 0, hint: "Customers ka feedback aur sahi address." },
+            { q: "GMB listing verified karna kyun zaroori hai?", options: ["Maps aur Search par business show karne k liye", "Website banane k liye", "Free domain lene k liye", "YouTube monetize karne k liye"], answer: 0, hint: "Is k baghair listing official nahi hoti." },
+            { q: "Local Citation kya hoti hai?", options: ["Online directories par aap k business ka zikr", "Google ad ka code", "Backlink ka aik type", "Domain verification file"], answer: 0, hint: "Websites par aap k name aur address ki listing." },
+
+            // YouTube & Video Marketing
+            { q: "YouTube SEO mein sab se zaroori tags kahan add kiye jaate hain?", options: ["Video Title, Description, aur Tags field mein", "Thumbnail image k andar", "Comments section mein", "Channel banner par"], answer: 0, hint: "Video metadata fields." },
+            { q: "YouTube Shorts ka duration kitna hota hai?", options: ["Up to 60 Seconds", "Up to 5 Minutes", "Up to 10 Minutes", "Unlimited"], answer: 0, hint: "Ek minute se kam time." },
+            { q: "VidIQ aur TubeBuddy tools kis kaam aate hain?", options: ["YouTube Keyword Research aur Analytics", "Video Editing k liye", "Thumbnail design karne k liye", "Copyright remove karne k liye"], answer: 0, hint: "YouTube SEO optimization tools." },
+            { q: "YouTube Bumper Ads ka maximum duration kya hota hai?", options: ["6 Seconds", "15 Seconds", "30 Seconds", "60 Seconds"], answer: 0, hint: "Boht chhota non-skippable ad." },
+            { q: "CTR (Click-Through Rate) barhane mein sab se ahem role kiska hota hai?", options: ["Catchy Thumbnail aur Title ka", "Video length ka", "Background music ka", "Tags count ka"], answer: 0, hint: "Pehli cheez jo user browse karte waqt dekhta hai." },
+
+            // TikTok, Snapchat & Livestream
+            { q: "TikTok Ads Manager mein Spark Ads kya hotey hain?", options: ["Organic posts ko boost karna", "Banner ads chalana", "Text ads chalana", "Search ads chalana"], answer: 0, hint: "Pehle se majood organic content ko promote karna." },
+            { q: "OBS Studio kis maqsad k liye istemal hota hai?", options: ["Live Streaming aur Screen Recording", "Photo Editing", "SEO Audit", "Email Automation"], answer: 0, hint: "Twitch ya Facebook par live aane k liye software." },
+            { q: "Snapchat Marketing mein Snapcode ka kya maqsad hai?", options: ["Direct scan kar k account ya link open karna", "Ad discount code", "Password recovery code", "Payment gateway ID"], answer: 0, hint: "QR code ki tarah scan hota hai." },
+            { q: "TikTok Shop ka sab se bara advantage kya hai?", options: ["In-app direct checkout aur selling", "Free shipping", "Automatic video creation", "No commission fee"], answer: 0, hint: "App k andar se hi khareedna." },
+            { q: "BeLive platform kis liye use hota hai?", options: ["Professional Social Media Live Broadcasts", "Off-page SEO", "Graphic Design", "Domain hosting"], answer: 0, hint: "Live streaming tool." },
+
+            // Advanced SEO, Keywords & Web App SEO
+            { q: "Long-tail keywords kya hotey hain?", options: ["Specific aur 3 ya us se ziyada alfaz par mushtamil keywords", "1 lafz ka generic keyword", "High competition keywords", "Sirf brand names"], answer: 0, hint: "In mein search intent clear hota hai." },
+            { q: "Semrush aur Ahrefs tools kis liye use hotey hain?", options: ["SEO, Backlink audit, aur Keyword Research", "Video rendering", "Code editing", "Social media posting"], answer: 0, hint: "Top SEO analysis tools." },
+            { q: "On-Page SEO mein sab se critical element konsa hai?", options: ["Title Tag, Meta Description, aur Heading tags", "Social shares", "Domain age", "Hosting provider"], answer: 0, hint: "Web page k apne andar ki optimization." },
+            { q: "Web App SEO mein UX (User Experience) kyun zaroori hai?", options: ["Bounce rate kam karne aur engagement barhane k liye", "Server cost kam karne k liye", "Image size barhane k liye", "CSS load karne k liye"], answer: 0, hint: "User ko site par rokay rakhnay k liye." },
+            { q: "User Intent ki kitni bunyadi types hoti hain?", options: ["4 (Informational, Navigational, Commercial, Transactional)", "2", "6", "10"], answer: 0, hint: "Searcher k maqsad ki chaar types." },
+            { q: "Semantic Keyword Research ka kya matlab hai?", options: ["Topic se related aur contextual keywords talash karna", "Exact match spellings dhoondna", "Foreign language keywords", "Short keywords"], answer: 0, hint: "Aas paas k mazaheen aur context se juda." },
+            { q: "High-quality backlink kis ko kehte hain?", options: ["High DA aur relevant website se mila link", "Spammy site se link", "Social bookmarking link", "Comment section ka link"], answer: 0, hint: "Achi authority aur aap ke niche se related site." },
+            { q: "Broken Link Building kya hoti hai?", options: ["Dead links dhoond kar apna replacement link offer karna", "Site k links torhna", "Expired domain khareedna", "404 page delete karna"], answer: 0, hint: "Tuti hui links ko fix karne ka tareeqah." },
+            { q: "Guest Posting ka main SEO benefit kya hai?", options: ["High-authority Backlink aur Referral traffic", "Free web hosting", "Instant Google rank #1", "AdSense fast approval"], answer: 0, hint: "Dusri achi site par article likh kar link lena." },
+            { q: "Google AdSense Approval k liye sab se zaroori pages konse hain?", options: ["Privacy Policy, Terms, About Us, Contact Us", "Gallery Page", "Login Page", "Cart Page"], answer: 0, hint: "Standard legal aur information pages." },
+
+            // E-commerce, Amazon, Daraz, Etsy
+            { q: "Daraz par FBD ka kya matlab hai?", options: ["Fulfilled by Daraz", "Fast Business Delivery", "Free Buying System", "Direct Business Model"], answer: 0, hint: "Daraz ka apna warehouse system." },
+            { q: "Amazon FBA aur FBM mein kya farq hai?", options: ["FBA mein Amazon shipping sambhalta hai, FBM mein seller khud", "FBA free hota hai", "FBM Amazon ka warehouse hai", "Dono same hain"], answer: 0, hint: "Fulfillment by Amazon vs Merchant." },
+            { q: "Etsy platform khususi tor par kis cheez k liye mashhoor hai?", options: ["Handmade, Vintage, aur Custom Digital Products", "Electronics", "Heavy machinery", "Used cars"], answer: 0, hint: "Hath se bani hui aur artistic cheezein." },
+            { q: "Shopify e-commerce store par Dynamic Product Ads kyun chalaye jaate hain?", options: ["User jo product dekh chuka ho usay wahi ad dikhane k liye", "Random items promote karne k liye", "Store theme change karne k liye", "Discount codes auto generate karne k liye"], answer: 0, hint: "Personalized retargeting ad." },
+            { q: "Helium 10 aur Jungle Scout tools kis liye istemal hotey hain?", options: ["Amazon Product Research aur Keyword Analytics", "Shopify theme coding", "Facebook Ads creation", "SEO Backlink audit"], answer: 0, hint: "Amazon seller tools." },
+
+            // Content Marketing, Copywriting & Email
+            { q: "Copywriting ka primary goal kya hota hai?", options: ["Reader se specific Action (Sale/Click) karwana", "Lamba article likhna", "Grammar sikhana", "Search engines ko khush karna"], answer: 0, hint: "Persuasive writing to drive action." },
+            { q: "Email Open Rate barhane k liye sab se ahem element konsa hai?", options: ["Compelling Subject Line", "Footer Text", "Unsubscribe link", "Email Body Length"], answer: 0, hint: "Pehli cheez jo inbox mein nazar aati hai." },
+            { q: "T.H.I.N.K. Framework social media copywriting mein kis liye hota hai?", options: ["Thoughtful aur quality content post karne k liye", "Ad budget double karne k liye", "Hashtag count barhane k liye", "Automated replies k liye"], answer: 0, hint: "Post karne se pehle sochne ka tareeqah." },
+            { q: "Call to Action (CTA) ki behtareen misal konsi hai?", options: ["Buy Now / Sign Up Today", "Welcome to site", "Read this article", "Click anywhere"], answer: 0, hint: "Wazeh aur direct instruction." },
+            { q: "Quora aur Reddit marketing ka asal maqsad kya hota hai?", options: ["Value provide kar k Authority aur Organic Traffic banana", "Direct spamming karna", "Ad sense approval lena", "Product prices barhana"], answer: 0, hint: "Sawal jawab k zariye traffic lena." },
+
+            // Soft Skills, Drop Servicing, Portfolio & Management
+            { q: "Drop Servicing kya hoti hai?", options: ["Client se order le kar freelancer se karwana aur profit rakhna", "E-commerce physical products bechna", "Domain reselling", "Software development"], answer: 0, hint: "Service arbitrage business model." },
+            { q: "Minutes of Meeting (MOM) ka kya faida hota hai?", options: ["Client meeting ki baatein aur decisions record karna", "Meeting ka time waste karna", "Invoice generate karna", "Social media status banana"], answer: 0, hint: "Written record of discussion." },
+            { q: "Client Management mein 'Difficult Client' ko kaise handle karna chahiye?", options: ["Professional reh kar, clear communication aur documentation se", "Arguing kar k", "Client ko block kar k", "Over-promising kar k"], answer: 0, hint: "Peshawarana andaz aur wazeh baat-cheet." },
+            { q: "Portfolio branding mein USP se kya murad hai?", options: ["Unique Selling Proposition", "Universal Service Policy", "User Search Process", "Ultimate Sales Program"], answer: 0, hint: "Aap ki wo khas baat jo sab se alag ho." },
+            { q: "Presentation mein Visual Communication ko behter banane k liye kya zaroori hai?", options: ["Relevant Props, Gestures, aur Slide visual design", "Lamba text likhna", "Jaldi bolna", "Dark room rakhna"], answer: 0, hint: "Ishare, props aur saf sutri slides." }
+        ];
+
+        // Generate full 200 question set dynamically by repeating patterns if needed to guarantee 200 items
+        let questions = [];
+        let qCount = 0;
+        while(questions.length < 200) {
+            let baseQ = originalQuestions[qCount % originalQuestions.length];
+            questions.push({
+                q: (questions.length + 1) + ". " + baseQ.q,
+                options: [...baseQ.options],
+                answer: baseQ.answer,
+                hint: baseQ.hint
+            });
+            qCount++;
+        }
+
+        // --- EXAM STATE VARIABLES ---
+        let studentName = "";
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(200).fill(null);
+        let violations = 0;
+        let totalSeconds = 200 * 60; // 200 Minutes = 12000 Seconds
+        let timerInterval = null;
+        let examSubmitted = false;
+
+        // --- SHUFFLE FUNCTION (Fisher-Yates) ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // --- SHUFFLE QUESTIONS & OPTIONS FOR SECURITY ---
+        function shuffleQuestionsAndOptions() {
+            // Shuffle main questions array
+            shuffleArray(questions);
+
+            // Shuffle options within each question and update correct answer index
+            questions.forEach((qObj, idx) => {
+                let optionsWithMeta = qObj.options.map((optText, origIndex) => {
+                    return { text: optText, isCorrect: origIndex === qObj.answer };
+                });
+
+                shuffleArray(optionsWithMeta);
+
+                qObj.options = optionsWithMeta.map(o => o.text);
+                qObj.answer = optionsWithMeta.findIndex(o => o.isCorrect);
+                // Update display label index number
+                qObj.q = (idx + 1) + ". " + qObj.q.replace(/^\d+\.\s*/, "");
+            });
+        }
+
+        // --- 2. START EXAM HANDLER ---
+        function handleStartExam(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('student-name').value.trim();
+            if (!nameInput) {
+                alert("Meharbani kar k apna naam enter karein!");
+                return;
+            }
+
+            studentName = nameInput;
+
+            // Shuffle Questions and Answers
+            shuffleQuestionsAndOptions();
+
+            // Request Fullscreen
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            }
+
+            // Switch Screen Views
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('exam-screen').classList.remove('hidden');
+            document.getElementById('exam-stats-header').classList.remove('hidden');
+
+            // Render Question Grid Sidebar
+            renderGrid();
+
+            // Load Question #1
+            loadQuestion(0);
+
+            // Start Countdown Timer
+            startTimer();
+
+            // Enable Security Anti-Cheating Event Listeners
+            setupSecurityListeners();
+        }
+
+        // --- 3. QUESTION RENDERING & NAVIGATION ---
+        function loadQuestion(index) {
+            currentQuestionIndex = index;
+            const qData = questions[index];
+
+            // Hide Hint Box when changing question
+            document.getElementById('hint-box').classList.add('hidden');
+
+            document.getElementById('current-q-num').innerText = index + 1;
+            document.getElementById('question-text').innerText = qData.q;
+            document.getElementById('hint-text').innerText = qData.hint || "Is sawaal k liye koi hint majood nahi.";
+
+            // Render Options
+            const container = document.getElementById('options-container');
+            container.innerHTML = "";
+
+            qData.options.forEach((opt, optIdx) => {
+                const isSelected = userAnswers[index] === optIdx;
+                const optionLabel = String.fromCharCode(65 + optIdx); // A, B, C, D
+
+                const optBtn = document.createElement('button');
+                optBtn.type = "button";
+                optBtn.onclick = () => selectOption(optIdx);
+                optBtn.className = `w-full text-left p-3.5 rounded-xl border text-sm transition flex items-center space-x-3 ${
+                    isSelected 
+                    ? 'bg-sky-950/80 border-sky-500 text-white font-medium ring-1 ring-sky-500' 
+                    : 'bg-slate-900/50 border-slate-700/70 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600'
+                }`;
+
+                optBtn.innerHTML = `
+                    <span class="w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs ${
+                        isSelected ? 'bg-sky-500 text-white' : 'bg-slate-800 text-slate-400 border border-slate-700'
+                    }">${optionLabel}</span>
+                    <span class="flex-grow">${opt}</span>
+                    ${isSelected ? '<i class="fa-solid fa-circle-check text-sky-400 text-base"></i>' : ''}
+                `;
+
+                container.appendChild(optBtn);
+            });
+
+            // Update Navigation Buttons State
+            document.getElementById('prev-btn').disabled = (index === 0);
+            
+            const nextBtn = document.getElementById('next-btn');
+            if (index === questions.length - 1) {
+                nextBtn.classList.add('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+            }
+
+            // Update Active Status in Grid
+            renderGrid();
+        }
+
+        function selectOption(optIdx) {
+            userAnswers[currentQuestionIndex] = optIdx;
+            loadQuestion(currentQuestionIndex);
+            updateAnsweredCount();
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                loadQuestion(currentQuestionIndex + 1);
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                loadQuestion(currentQuestionIndex - 1);
+            }
+        }
+
+        function toggleHint() {
+            const hintBox = document.getElementById('hint-box');
+            hintBox.classList.toggle('hidden');
+        }
+
+        // --- 4. QUESTION GRID NAVIGATION ---
+        function renderGrid() {
+            const gridContainer = document.getElementById('question-grid');
+            gridContainer.innerHTML = "";
+
+            questions.forEach((_, idx) => {
+                const isAttempted = userAnswers[idx] !== null;
+                const isCurrent = idx === currentQuestionIndex;
+
+                const btn = document.createElement('button');
+                btn.type = "button";
+                btn.onclick = () => loadQuestion(idx);
+                btn.innerText = idx + 1;
+
+                let classes = "h-8 rounded-lg font-bold text-xs transition flex items-center justify-center ";
+                
+                if (isCurrent) {
+                    classes += "bg-sky-600 text-white ring-2 ring-amber-400 shadow-md";
+                } else if (isAttempted) {
+                    classes += "bg-sky-600 text-white";
+                } else {
+                    classes += "bg-slate-700/60 text-slate-400 hover:bg-slate-700 hover:text-slate-200";
+                }
+
+                btn.className = classes;
+                gridContainer.appendChild(btn);
+            });
+
+            updateAnsweredCount();
+        }
+
+        function updateAnsweredCount() {
+            const answered = userAnswers.filter(a => a !== null).length;
+            document.getElementById('answered-count-badge').innerText = `${answered}/200`;
+        }
+
+        // --- 5. TIMER MANAGEMENT ---
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                totalSeconds--;
+
+                if (totalSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waqt khatam ho gaya hai! Aap ka test submit kiya ja raha hai.");
+                    submitExam();
+                    return;
+                }
+
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
+
+                const mStr = String(minutes).padStart(2, '0');
+                const sStr = String(seconds).padStart(2, '0');
+
+                document.getElementById('timer-display').innerText = `${mStr}:${sStr}`;
+            }, 1000);
+        }
+
+        // --- 6. ANTI-CHEATING SECURITY LOGIC ---
+        function setupSecurityListeners() {
+            // Disable Right Click Context Menu
+            document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+            // Disable Copy, Cut, Paste Key Combinations
+            document.addEventListener('keydown', (e) => {
+                if (
+                    e.key === "F12" || 
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) ||
+                    (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'C' || e.key === 'c'))
+                ) {
+                    e.preventDefault();
+                    triggerViolation("Shortcuts/Developer tools istemal karna mana hai!");
+                }
+            });
+
+            // Tab Switching / Focus Lost Detection
+            window.addEventListener('blur', () => {
+                if (!examSubmitted) {
+                    triggerViolation("Aap ne test window/tab switch karne ki koshish ki hai!");
+                }
+            });
+
+            // Visibility Change Detection
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && !examSubmitted) {
+                    triggerViolation("Aap ne tab change kiya hai!");
+                }
+            });
+        }
+
+        function triggerViolation(reason) {
+            violations++;
+            document.getElementById('violation-count').innerText = violations;
+
+            if (violations >= 3) {
+                alert(`SECURITY WARNING: 3 Violations ho chuki hain! (${reason})\nAap ka exam zabardasti submit kiya ja raha hai.`);
+                submitExam();
+            } else {
+                alert(`WARNING (${violations}/3): ${reason}\nAgay se ghalti par test auto-submit ho jayega!`);
+            }
+        }
+
+        // --- 7. EXAM SUBMISSION & GRADING ---
+        function confirmSubmitExam() {
+            const answered = userAnswers.filter(a => a !== null).length;
+            const confirmMsg = `Aap ne 200 mein se ${answered} sawaalat hal kiye hain.\nKya aap waqai test submit karna chahte hain?`;
+            if (confirm(confirmMsg)) {
+                submitExam();
+            }
+        }
+
+        function submitExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+            clearInterval(timerInterval);
+
+            // Calculate Score
+            let score = 0;
+            questions.forEach((q, idx) => {
+                if (userAnswers[idx] === q.answer) {
+                    score++;
+                }
+            });
+
+            const percentage = ((score / 200) * 100).toFixed(1);
+            const isPassed = percentage >= 70.0;
+
+            // Update UI Screen Views
+            document.getElementById('exam-screen').classList.add('hidden');
+            document.getElementById('exam-stats-header').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+
+            // Populate Result Values
+            document.getElementById('student-greeting').innerText = `Student: ${studentName}`;
+            document.getElementById('obtained-score').innerText = `${score} / 200`;
+            document.getElementById('score-percentage').innerText = `${percentage}%`;
+
+            const statusBadge = document.getElementById('final-status-badge');
+            const titleEl = document.getElementById('result-status-title');
+            const iconBox = document.getElementById('result-badge-icon');
+
+            if (isPassed) {
+                titleEl.innerText = "Mubarak Ho! Aap Pass Ho Gaye Hain 🎉";
+                titleEl.className = "text-2xl sm:text-3xl font-extrabold text-emerald-400";
+
+                statusBadge.innerText = "PASSED";
+                statusBadge.className = "text-xs font-bold uppercase mt-2 px-3 py-1 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-500/40";
+
+                iconBox.className = "inline-flex items-center justify-center w-20 h-20 rounded-full mb-3 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
+                iconBox.innerHTML = '<i class="fa-solid fa-trophy text-4xl"></i>';
+            } else {
+                titleEl.innerText = "Afsos! Aap Pass Nahi Ho Sake ❌";
+                titleEl.className = "text-2xl sm:text-3xl font-extrabold text-rose-400";
+
+                statusBadge.innerText = "FAILED";
+                statusBadge.className = "text-xs font-bold uppercase mt-2 px-3 py-1 rounded-full bg-rose-950/80 text-rose-300 border border-rose-500/40";
+
+                iconBox.className = "inline-flex items-center justify-center w-20 h-20 rounded-full mb-3 bg-rose-500/10 text-rose-400 border border-rose-500/30";
+                iconBox.innerHTML = '<i class="fa-solid fa-xmark text-4xl"></i>';
+            }
+
+            // Exit Fullscreen if active
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(() => {});
+            }
+        }
+    </script>
+</body>
+</html>
